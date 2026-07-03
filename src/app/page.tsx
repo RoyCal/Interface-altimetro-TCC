@@ -29,7 +29,7 @@ export default async function Home() {
     const usuario = await findUsuarioById(tipoValor?.id_usuario)
 
     return (
-        <div className="p-20 border-2 border-amber-400">
+        <div className="p-20">
             <ChartAreaDefault chartData={chartData} apogee={getApogee(chartData)} flight_time={getFlightTime(chartData)} type_data={tipoValor} usuario={usuario}/>
         </div>
     );

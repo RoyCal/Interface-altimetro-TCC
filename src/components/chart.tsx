@@ -1,6 +1,13 @@
 'use client';
 
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+import {
+    Area,
+    AreaChart,
+    CartesianGrid,
+    ReferenceLine,
+    XAxis,
+    YAxis,
+} from 'recharts';
 
 import {
     Card,
@@ -19,7 +26,7 @@ import {
 interface ChartDataPoint {
     altitude: number;
     time_stamp: number;
-};
+}
 
 interface TipoValor {
     id_tipo: number;
@@ -31,7 +38,7 @@ interface TipoValor {
 interface Usuario {
     id_usuario: number;
     usuario: string;
-};
+}
 
 interface ChartAreaDefaultProps {
     chartData: ChartDataPoint[];
@@ -42,9 +49,9 @@ interface ChartAreaDefaultProps {
 }
 
 const chartConfig = {
-    desktop: {
+    altitude: {
         label: 'Altura',
-        color: 'var(--chart-1)',
+        color: 'linear-gradient(180deg, #38bdf8 0%, #0284c7 100%)',
     },
 } satisfies ChartConfig;
 
@@ -66,74 +73,150 @@ function CustomTooltip({
     const altitudeValue = point?.altitude ?? payload[0]?.value ?? 0;
 
     return (
-        <div className="rounded-lg border border-border/50 bg-background px-3 py-2 text-xs shadow-xl">
-            <div className="mb-1 font-medium text-foreground">Ponto medido</div>
-            <div className="flex items-center justify-between gap-3 text-muted-foreground">
-                <span>Tempo</span>
-                <span className="font-mono text-foreground">
-                    {Number(timeValue).toFixed(2)} s
-                </span>
+        <div className="rounded-3xl border border-slate-700 bg-slate-950/95 px-4 py-3 text-sm shadow-xl">
+            <div className="mb-2 text-xs uppercase tracking-[0.18em] text-sky-400">
+                Dados do ponto
             </div>
-            <div className="flex items-center justify-between gap-3 text-muted-foreground">
-                <span>Altura</span>
-                <span className="font-mono text-foreground">
-                    {Number(altitudeValue).toFixed(2)} m
-                </span>
+            <div className="grid gap-2">
+                <div className="flex items-center justify-between gap-4 rounded-2xl bg-slate-900/80 px-3 py-2 text-slate-200">
+                    <span className="text-slate-400">Tempo</span>
+                    <span className="font-mono font-semibold">
+                        {Number(timeValue).toFixed(2)} s
+                    </span>
+                </div>
+                <div className="flex items-center justify-between gap-4 rounded-2xl bg-slate-900/80 px-3 py-2 text-slate-200">
+                    <span className="text-slate-400">Altura</span>
+                    <span className="font-mono font-semibold">
+                        {Number(altitudeValue).toFixed(2)} m
+                    </span>
+                </div>
             </div>
         </div>
     );
 }
 
-export function ChartAreaDefault({ chartData, apogee, flight_time, type_data, usuario }: ChartAreaDefaultProps) {
+export function ChartAreaDefault({
+    chartData,
+    apogee,
+    flight_time,
+    type_data,
+    usuario,
+}: ChartAreaDefaultProps) {
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle className='text-2xl'>{type_data?.titulo}</CardTitle>
-                <CardDescription className='text-xl'>
-                    <span>Apogeu: {apogee}m</span>
-                </CardDescription>
-                <CardDescription className='text-xl'>
-                    <span>Tempo total de voo: {flight_time}s</span>
-                </CardDescription>
+        <Card className="overflow-hidden border-none bg-slate-950 shadow-2xl shadow-slate-950/40">
+            <CardHeader className="space-y-3 border-b border-slate-800/70 px-6 py-6">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                    <div>
+                        <CardTitle className="text-3xl font-semibold tracking-tight text-slate-100">
+                            {type_data?.titulo}
+                        </CardTitle>
+                        <CardDescription className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
+                            {type_data?.descricao ??
+                                'Dados de altitude do voo com frequência de 20Hz.'}
+                        </CardDescription>
+                    </div>
+                    <div className="grid gap-2 text-right text-sm text-slate-300">
+                        <span className="font-semibold text-slate-100">
+                            Apogeu
+                        </span>
+                        <span>
+                            {apogee != null ? `${apogee.toFixed(2)} m` : '—'}
+                        </span>
+                        <span className="font-semibold text-slate-100">
+                            Tempo total
+                        </span>
+                        <span>
+                            {flight_time != null
+                                ? `${flight_time.toFixed(2)} s`
+                                : '—'}
+                        </span>
+                    </div>
+                </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="px-6 py-6">
                 <ChartContainer config={chartConfig}>
                     <AreaChart
-                        className='text-lg'
                         accessibilityLayer
                         data={chartData}
                         margin={{
-                            left: 80,
-                            right: 160,
-                            top: 20,
-                            bottom: 20,
+                            left: 20,
+                            right: 20,
+                            top: 10,
+                            bottom: 30,
                         }}
                     >
-                        <CartesianGrid vertical={false} />
+                        <defs>
+                            <linearGradient
+                                id="altitudeGradient"
+                                x1="0"
+                                y1="0"
+                                x2="0"
+                                y2="1"
+                            >
+                                <stop
+                                    offset="0%"
+                                    stopColor="#38bdf8"
+                                    stopOpacity={0.55}
+                                />
+                                <stop
+                                    offset="100%"
+                                    stopColor="#0f172a"
+                                    stopOpacity={0}
+                                />
+                            </linearGradient>
+                        </defs>
+
+                        <CartesianGrid
+                            stroke="#334155"
+                            strokeDasharray="3 3"
+                            vertical={false}
+                        />
+
                         <XAxis
                             dataKey="time_stamp"
                             tickLine={true}
                             axisLine={true}
-                            tickMargin={4}
+                            tickMargin={12}
                             tickFormatter={(value) => Number(value).toFixed(1)}
+                            stroke="#94a3b8"
+                            tick={{ fill: '#cbd5e1', fontSize: 12 }}
                             label={{
                                 value: 'Tempo (s)',
-                                position: 'right',
-                                offset: 40
+                                position: 'insideBottom',
+                                offset: -20,
+                                fill: '#94a3b8',
+                                fontSize: 20,
                             }}
                         />
                         <YAxis
                             dataKey="altitude"
-                            tickLine={true}
-                            axisLine={true}
-                            tickMargin={8}
+                            tickLine={false}
+                            axisLine={false}
+                            tickMargin={12}
+                            stroke="#94a3b8"
+                            tick={{ fill: '#cbd5e1', fontSize: 12 }}
                             label={{
                                 value: 'Altura (m)',
-                                angle: 0,
+                                angle: -90,
                                 position: 'insideLeft',
-                                offset: -70
+                                offset: 0,
+                                fill: '#94a3b8',
+                                fontSize: 20,
                             }}
                         />
+                        {apogee != null && (
+                            <ReferenceLine
+                                y={apogee}
+                                stroke="#38bdf8"
+                                strokeDasharray="4 4"
+                                label={{
+                                    value: `Apogeu`,
+                                    position: 'left',
+                                    fill: '#38bdf8',
+                                    fontSize: 12,
+                                }}
+                            />
+                        )}
                         <ChartTooltip
                             cursor={true}
                             content={<CustomTooltip />}
@@ -141,19 +224,33 @@ export function ChartAreaDefault({ chartData, apogee, flight_time, type_data, us
                         <Area
                             dataKey="altitude"
                             type="linear"
-                            fill="var(--color-desktop)"
-                            fillOpacity={0.7}
-                            stroke="var(--color-desktop)"
+                            stroke="#38bdf8"
+                            strokeWidth={3}
+                            fill="url(#altitudeGradient)"
+                            fillOpacity={0.9}
+                            isAnimationActive={false}
+                            dot={false}
+                            activeDot={{
+                                fill: '#38bdf8',
+                                stroke: '#ffffff',
+                                strokeWidth: 2,
+                                r: 4,
+                            }}
                         />
                     </AreaChart>
                 </ChartContainer>
             </CardContent>
-            <CardFooter className='flex flex-col text-lg'>
-                <div>
-                    Descrição: {type_data?.descricao}
+            <CardFooter className="flex flex-wrap items-center justify-between gap-4 border-t border-slate-800/70 px-6 py-4 text-sm text-slate-300">
+                <div className="max-w-xl leading-6">
+                    Exibindo a evolução da altitude ao longo do tempo, com
+                    destaque para o apogeu no voo.
                 </div>
-
-                <div>Cadastrado pelo usuário: {usuario?.id_usuario} - {usuario?.usuario}</div>
+                <div className="rounded-2xl bg-slate-900/80 px-4 py-2 text-slate-200">
+                    Usuário:{' '}
+                    {usuario
+                        ? `${usuario.id_usuario} — ${usuario.usuario}`
+                        : 'Não informado'}
+                </div>
             </CardFooter>
         </Card>
     );
