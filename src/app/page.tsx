@@ -1,61 +1,27 @@
-import { ChartAreaDefault } from '@/components/chart';
-import { RocketNavbar } from '@/components/navbar';
+import { LaunchDashboard } from '@/components/launch-dashboard';
 import {
     getChartDataByType,
-    findTipoValorById,
+    findAllTiposValores,
     findUsuarioById,
 } from '@/lib/db';
 
-interface ChartData {
-    altitude: number;
-    time_stamp: number;
-}
-
-function getApogee(data: ChartData[]): number | undefined {
-    if (data.length === 0) return undefined;
-
-    return Number(
-        data
-            .reduce(
-                (maior, item) => Math.max(maior, item.altitude),
-                data[0].altitude,
-            )
-            .toFixed(2),
-    );
-}
-
-function getFlightTime(data: ChartData[]): number | undefined {
-    if (data.length === 0) return undefined;
-
-    return data.at(-1)?.time_stamp;
-}
-
-const idTipoValor = 4;
-
 export default async function Home() {
-    const chartData = await getChartDataByType(idTipoValor);
-    const tipoValor = await findTipoValorById(idTipoValor);
-    const usuario = await findUsuarioById(tipoValor?.id_usuario);
+    const launches = await findAllTiposValores();
+    const launchesWithData = await Promise.all(
+        launches.map(async (launch) => {
+            const usuario = await findUsuarioById(launch.id_usuario);
+            const chartData = await getChartDataByType(launch.id_tipo);
+            return {
+                ...launch,
+                usuario,
+                chartData,
+            };
+        }),
+    );
 
     return (
         <div className="min-h-screen bg-slate-950 text-slate-100">
-            <RocketNavbar/>
-            <div className="flex">
-                <ChartAreaDefault
-                    chartData={chartData}
-                    apogee={getApogee(chartData)}
-                    flight_time={getFlightTime(chartData)}
-                    type_data={tipoValor}
-                    usuario={usuario}
-                />
-                <ChartAreaDefault
-                    chartData={chartData}
-                    apogee={getApogee(chartData)}
-                    flight_time={getFlightTime(chartData)}
-                    type_data={tipoValor}
-                    usuario={usuario}
-                />
-            </div>
+            <LaunchDashboard launches={launchesWithData} />
         </div>
     );
 }
