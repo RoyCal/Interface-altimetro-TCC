@@ -228,7 +228,7 @@ export function ChartAreaDefault({
                             strokeWidth={3}
                             fill="url(#altitudeGradient)"
                             fillOpacity={0.9}
-                            isAnimationActive={false}
+                            isAnimationActive={true}
                             dot={false}
                             activeDot={{
                                 fill: '#38bdf8',
