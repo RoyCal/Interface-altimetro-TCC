@@ -83,16 +83,16 @@ export function LaunchDashboard({ launches }: LaunchDashboardProps) {
     const launchCount = launches.length;
 
     return (
-        <div className="flex flex-col h-full min-h-screen bg-slate-950 text-slate-100">
+        <div className="flex h-screen min-h-screen flex-col overflow-hidden bg-slate-950 text-slate-100">
             <RocketNavbar
                 activeState={mode}
                 onChangeState={handleModeChange}
                 items={navItems}
             />
-            <main className="flex-1 w-full space-y-8 px-6 py-8">
+            <main className="flex-1 min-h-0 overflow-hidden w-full space-y-8 px-6 py-6">
                 {mode === 'visualize' ? (
-                    <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
-                        <aside className="rounded-3xl border border-slate-800/80 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/20">
+                    <div className="grid h-full min-h-0 gap-6 lg:grid-cols-[320px_1fr]">
+                        <aside className="max-h-full overflow-hidden rounded-3xl border border-slate-800/80 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/20">
                             <div className="mb-6 flex items-center justify-between gap-4">
                                 <div>
                                     <p className="text-sm font-semibold text-slate-100">
@@ -126,38 +126,58 @@ export function LaunchDashboard({ launches }: LaunchDashboardProps) {
                             </ul>
                         </aside>
 
-                        <section>
-                            {selectedLaunch ? (
-                                <ChartAreaDefault
-                                    chartData={selectedLaunch.chartData}
-                                    apogee={
-                                        selectedLaunch.chartData.length
-                                            ? Math.max(
-                                                  ...selectedLaunch.chartData.map(
-                                                      (item) => item.altitude,
-                                                  ),
-                                              )
-                                            : undefined
-                                    }
-                                    flight_time={
-                                        selectedLaunch.chartData.length
-                                            ? selectedLaunch.chartData[
-                                                  selectedLaunch.chartData
-                                                      .length - 1
-                                              ].time_stamp
-                                            : undefined
-                                    }
-                                    type_data={selectedLaunch}
-                                    usuario={selectedLaunch.usuario}
-                                />
-                            ) : (
-                                <SkeletonCard title="Gráfico aguardando seleção" />
-                            )}
+                        <section className="flex-1 min-h-0 flex flex-col overflow-hidden rounded-3xl border border-slate-800/80 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/20">
+                            <div className="mb-6 flex items-center justify-between gap-4">
+                                <div>
+                                    <p className="text-sm font-semibold text-slate-100">
+                                        Gráfico principal
+                                    </p>
+                                    <p className="text-xs text-slate-500">
+                                        Aqui aparece o voo selecionado.
+                                    </p>
+                                </div>
+                                <span className="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-300">
+                                    {selectedLaunch
+                                        ? 'Selecionado'
+                                        : 'Aguardando'}
+                                </span>
+                            </div>
+                            <div className="flex-1 min-h-0 overflow-hidden">
+                                {selectedLaunch ? (
+                                    <ChartAreaDefault
+                                        chartData={selectedLaunch.chartData}
+                                        apogee={
+                                            selectedLaunch.chartData.length
+                                                ? Math.max(
+                                                      ...selectedLaunch.chartData.map(
+                                                          (item) =>
+                                                              item.altitude,
+                                                      ),
+                                                  )
+                                                : undefined
+                                        }
+                                        flight_time={
+                                            selectedLaunch.chartData.length
+                                                ? selectedLaunch.chartData[
+                                                      selectedLaunch.chartData
+                                                          .length - 1
+                                                  ].time_stamp
+                                                : undefined
+                                        }
+                                        type_data={selectedLaunch}
+                                        usuario={selectedLaunch.usuario}
+                                    />
+                                ) : (
+                                    <div className="h-full min-h-0 overflow-hidden">
+                                        <SkeletonCard title="Gráfico aguardando seleção" />
+                                    </div>
+                                )}
+                            </div>
                         </section>
                     </div>
                 ) : (
-                    <div className="grid gap-6 lg:grid-cols-2">
-                        <section className="rounded-3xl border border-slate-800/80 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/20">
+                    <div className="grid h-full min-h-0 gap-6 lg:grid-cols-2">
+                        <section className="flex-1 min-h-0 flex flex-col overflow-hidden rounded-3xl border border-slate-800/80 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/20">
                             <div className="mb-6 flex items-center justify-between gap-4">
                                 <div>
                                     <p className="text-sm font-semibold text-slate-100">
@@ -186,7 +206,7 @@ export function LaunchDashboard({ launches }: LaunchDashboardProps) {
                                     </li>
                                 ))}
                             </ul>
-                            <div className="flex mt-6 justify-center">
+                            <div className="mt-6 flex-1 min-h-0 overflow-hidden">
                                 {leftLaunch ? (
                                     <ChartAreaDefault
                                         chartData={leftLaunch.chartData}
@@ -217,7 +237,7 @@ export function LaunchDashboard({ launches }: LaunchDashboardProps) {
                             </div>
                         </section>
 
-                        <section className="rounded-3xl border border-slate-800/80 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/20">
+                        <section className="flex-1 min-h-0 flex flex-col overflow-hidden rounded-3xl border border-slate-800/80 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/20">
                             <div className="mb-6 flex items-center justify-between gap-4">
                                 <div>
                                     <p className="text-sm font-semibold text-slate-100">
@@ -246,7 +266,7 @@ export function LaunchDashboard({ launches }: LaunchDashboardProps) {
                                     </li>
                                 ))}
                             </ul>
-                            <div className="flex mt-6 justify-center">
+                            <div className="mt-6 flex-1 min-h-0 overflow-hidden">
                                 {rightLaunch ? (
                                     <ChartAreaDefault
                                         chartData={rightLaunch.chartData}

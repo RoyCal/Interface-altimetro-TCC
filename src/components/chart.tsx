@@ -103,7 +103,7 @@ export function ChartAreaDefault({
     usuario,
 }: ChartAreaDefaultProps) {
     return (
-        <Card className="w-full rounded-3xl overflow-hidden border border-slate-800/80 bg-slate-950 shadow-2xl shadow-slate-950/40">
+        <Card className="flex h-full w-full max-h-[calc(100vh-8rem)] flex-col rounded-3xl overflow-hidden border border-slate-800/80 bg-slate-950 shadow-2xl shadow-slate-950/40">
             <CardHeader className="space-y-3 border-b border-slate-800/70 px-6 py-6">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                     <div>
@@ -133,8 +133,8 @@ export function ChartAreaDefault({
                     </div>
                 </div>
             </CardHeader>
-            <CardContent className="px-6 py-6">
-                <ChartContainer config={chartConfig}>
+            <CardContent className="flex-1 min-h-0 overflow-hidden px-6 py-6">
+                <ChartContainer config={chartConfig} className="h-full min-h-0">
                     <AreaChart
                         accessibilityLayer
                         data={chartData}
