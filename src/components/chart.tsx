@@ -55,6 +55,18 @@ const chartConfig = {
     },
 } satisfies ChartConfig;
 
+function formatDuration(seconds: number): string {
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+
+  const parts: string[] = [];
+
+  if (m > 0) parts.push(`${m} min`);
+  if (s > 0 || parts.length === 0) parts.push(`${s} s`);
+
+  return parts.join(" ");
+}
+
 function CustomTooltip({
     active,
     payload,
@@ -127,7 +139,7 @@ export function ChartAreaDefault({
                         </span>
                         <span>
                             {flight_time != null
-                                ? `${flight_time.toFixed(2)} s`
+                                ? `${formatDuration(flight_time)}`
                                 : '—'}
                         </span>
                     </div>
