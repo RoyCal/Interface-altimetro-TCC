@@ -49,7 +49,7 @@ function SkeletonCard({ title }: { title: string }) {
 }
 
 export function LaunchDashboard({ launches }: LaunchDashboardProps) {
-    const [mode, setMode] = useState<'visualize' | 'compare'>('visualize');
+    const [mode, setMode] = useState('visualize');
     const [selectedVisualId, setSelectedVisualId] = useState<number | null>(
         null,
     );
@@ -73,7 +73,7 @@ export function LaunchDashboard({ launches }: LaunchDashboardProps) {
         [launches, rightId],
     );
 
-    function handleModeChange(nextMode: 'visualize' | 'compare') {
+    function handleModeChange(nextMode: string) {
         setMode(nextMode);
         setSelectedVisualId(null);
         setLeftId(null);
@@ -83,31 +83,13 @@ export function LaunchDashboard({ launches }: LaunchDashboardProps) {
     const launchCount = launches.length;
 
     return (
-        <div className="min-h-screen bg-slate-950 text-slate-100">
+        <div className="flex flex-col h-full min-h-screen bg-slate-950 text-slate-100">
             <RocketNavbar
                 activeState={mode}
                 onChangeState={handleModeChange}
                 items={navItems}
             />
-            <main className="mx-auto max-w-7xl space-y-8 px-6 py-8">
-                <section className="rounded-3xl border border-slate-800/80 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/20">
-                    <div className="flex flex-wrap items-center justify-between gap-4">
-                        <div>
-                            <p className="text-sm uppercase tracking-[0.26em] text-sky-400">
-                                Modo
-                            </p>
-                            <h1 className="mt-2 text-3xl font-semibold text-white">
-                                {mode === 'compare'
-                                    ? 'Comparar lançamentos'
-                                    : 'Visualizar lançamentos'}
-                            </h1>
-                        </div>
-                        <div className="rounded-2xl bg-slate-950/90 px-4 py-3 text-sm text-slate-300">
-                            {launchCount} lançamentos disponíveis
-                        </div>
-                    </div>
-                </section>
-
+            <main className="flex-1 w-full space-y-8 px-6 py-8">
                 {mode === 'visualize' ? (
                     <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
                         <aside className="rounded-3xl border border-slate-800/80 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/20">
@@ -204,7 +186,7 @@ export function LaunchDashboard({ launches }: LaunchDashboardProps) {
                                     </li>
                                 ))}
                             </ul>
-                            <div className="mt-6">
+                            <div className="flex mt-6 justify-center">
                                 {leftLaunch ? (
                                     <ChartAreaDefault
                                         chartData={leftLaunch.chartData}
@@ -264,7 +246,7 @@ export function LaunchDashboard({ launches }: LaunchDashboardProps) {
                                     </li>
                                 ))}
                             </ul>
-                            <div className="mt-6">
+                            <div className="flex mt-6 justify-center">
                                 {rightLaunch ? (
                                     <ChartAreaDefault
                                         chartData={rightLaunch.chartData}

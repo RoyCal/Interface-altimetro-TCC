@@ -103,7 +103,7 @@ export function ChartAreaDefault({
     usuario,
 }: ChartAreaDefaultProps) {
     return (
-        <Card className="w-1/2 m-10 overflow-hidden border-none bg-slate-950 shadow-2xl shadow-slate-950/40">
+        <Card className="w-full rounded-3xl overflow-hidden border border-slate-800/80 bg-slate-950 shadow-2xl shadow-slate-950/40">
             <CardHeader className="space-y-3 border-b border-slate-800/70 px-6 py-6">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                     <div>
