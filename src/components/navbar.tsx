@@ -56,7 +56,7 @@ export function RocketNavbar({
                 </div>
 
                 <nav>
-                    <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-10">
                         {items.map((item) => {
                             const isActive = item.state === activeState;
                             if (onChangeState) {
@@ -68,7 +68,7 @@ export function RocketNavbar({
                                             onChangeState(item.state)
                                         }
                                         className={
-                                            'rounded-full px-4 py-2 text-sm font-medium transition ' +
+                                            'rounded-full px-4 py-2 text-lg font-medium transition ' +
                                             (isActive
                                                 ? 'bg-sky-500 text-slate-950 border border-sky-500'
                                                 : 'border border-slate-800/90 bg-slate-900/80 text-slate-100 hover:border-sky-400 hover:text-sky-300 hover:bg-slate-800')

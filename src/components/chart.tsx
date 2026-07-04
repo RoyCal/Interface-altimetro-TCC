@@ -105,19 +105,19 @@ export function ChartAreaDefault({
     return (
         <Card className="flex h-full w-full max-h-[calc(100vh-8rem)] flex-col rounded-3xl overflow-hidden border border-slate-800/80 bg-slate-950 shadow-2xl shadow-slate-950/40">
             <CardHeader className="space-y-3 border-b border-slate-800/70 px-6 py-6">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div className="flex gap-3 sm:flex-row sm:items-end sm:justify-between">
                     <div>
                         <CardTitle className="text-3xl font-semibold tracking-tight text-slate-100">
                             {type_data?.titulo}
                         </CardTitle>
-                        <CardDescription className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
+                        <CardDescription className="mt-2 max-w-2xl text-lg leading-6 text-slate-400">
                             {type_data?.descricao ??
                                 'Dados de altitude do voo com frequência de 20Hz.'}
                         </CardDescription>
                     </div>
-                    <div className="grid gap-2 text-right text-sm text-slate-300">
+                    <div className="flex gap-2 text-right text-lg text-slate-300">
                         <span className="font-semibold text-slate-100">
-                            Apogeu
+                            Apogeu:
                         </span>
                         <span>
                             {apogee != null ? `${apogee.toFixed(2)} m` : '—'}

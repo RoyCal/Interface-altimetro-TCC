@@ -127,21 +127,6 @@ export function LaunchDashboard({ launches }: LaunchDashboardProps) {
                         </aside>
 
                         <section className="flex-1 min-h-0 flex flex-col overflow-hidden rounded-3xl border border-slate-800/80 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/20">
-                            <div className="mb-6 flex items-center justify-between gap-4">
-                                <div>
-                                    <p className="text-sm font-semibold text-slate-100">
-                                        Gráfico principal
-                                    </p>
-                                    <p className="text-xs text-slate-500">
-                                        Aqui aparece o voo selecionado.
-                                    </p>
-                                </div>
-                                <span className="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-300">
-                                    {selectedLaunch
-                                        ? 'Selecionado'
-                                        : 'Aguardando'}
-                                </span>
-                            </div>
                             <div className="flex-1 min-h-0 overflow-hidden">
                                 {selectedLaunch ? (
                                     <ChartAreaDefault
