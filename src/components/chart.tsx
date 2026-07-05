@@ -266,7 +266,7 @@ export function ChartAreaDefault({
                             label={{
                                 value: 'Tempo (s)',
                                 position: 'insideBottom',
-                                offset: -20,
+                                offset: -25,
                                 fill: '#94a3b8',
                                 fontSize: 20,
                             }}
@@ -282,7 +282,7 @@ export function ChartAreaDefault({
                                 value: 'Altura (m)',
                                 angle: -90,
                                 position: 'insideLeft',
-                                offset: 0,
+                                offset: -10,
                                 fill: '#94a3b8',
                                 fontSize: 20,
                             }}
@@ -327,35 +327,45 @@ export function ChartAreaDefault({
                 <div className="flex flex-wrap items-center gap-3">
                     <div className="rounded-2xl bg-slate-900/80 px-4 py-2 text-slate-200">
                         Ponto 1:{' '}
-                        {firstPoint
-                            ? `${firstPoint.time_stamp.toFixed(2)} s • ${firstPoint.altitude.toFixed(2)} m`
-                            : ''}
+                        <span className='font-bold'>
+                            {firstPoint
+                                ? `${firstPoint.time_stamp.toFixed(2)} s • ${firstPoint.altitude.toFixed(2)} m`
+                                : ''}
+                        </span>
                     </div>
                     <div className="rounded-2xl bg-slate-900/80 px-4 py-2 text-slate-200">
                         Ponto 2:{' '}
-                        {secondPoint
-                            ? `${secondPoint.time_stamp.toFixed(2)} s • ${secondPoint.altitude.toFixed(2)} m`
-                            : ''}
+                        <span className="font-bold">
+                            {secondPoint
+                                ? `${secondPoint.time_stamp.toFixed(2)} s • ${secondPoint.altitude.toFixed(2)} m`
+                                : ''}
+                        </span>
                     </div>
                     {hasTwoPoints ? (
                         <>
                             <div className="rounded-2xl bg-slate-900/80 px-4 py-2 text-slate-200">
                                 ΔTempo:{' '}
-                                {timeDifference != null
-                                    ? `${formatDuration(timeDifference)}`
-                                    : '—'}
+                                <span className="font-bold">
+                                    {timeDifference != null
+                                        ? `${formatDuration(timeDifference)}`
+                                        : '—'}
+                                </span>
                             </div>
                             <div className="rounded-2xl bg-slate-900/80 px-4 py-2 text-slate-200">
                                 ΔAltura:{' '}
-                                {altitudeDifference != null
-                                    ? `${altitudeDifference.toFixed(2)} m`
-                                    : '—'}
+                                <span className="font-bold">
+                                    {altitudeDifference != null
+                                        ? `${altitudeDifference.toFixed(2)} m`
+                                        : '—'}
+                                </span>
                             </div>
                             <div className="rounded-2xl bg-slate-900/80 px-4 py-2 text-slate-200">
                                 Velocidade média:{' '}
-                                {averageSpeedKmh != null
-                                    ? `${averageSpeedKmh.toFixed(2)} km/h`
-                                    : '—'}
+                                <span className="font-bold">
+                                    {averageSpeedKmh != null
+                                        ? `${averageSpeedKmh.toFixed(2)} km/h`
+                                        : '—'}
+                                </span>
                             </div>
                         </>
                     ) : null}
