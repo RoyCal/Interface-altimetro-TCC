@@ -48,6 +48,7 @@ interface ChartAreaDefaultProps {
     flight_time: number | undefined;
     type_data: TipoValor | null;
     usuario: Usuario | null;
+    date: string | null;
 }
 
 const chartConfig = {
@@ -115,6 +116,7 @@ export function ChartAreaDefault({
     flight_time,
     type_data,
     usuario,
+    date,
 }: ChartAreaDefaultProps) {
     const [selectedPoints, setSelectedPoints] = useState<{
         point1: number | null;
@@ -189,11 +191,14 @@ export function ChartAreaDefault({
                         </CardDescription>
                     </div>
                     <div className="flex flex-col gap-y-4">
-                        <div className="self-end rounded-2xl bg-slate-900/80 px-4 py-2 text-slate-200 border">
-                            Usuário:{' '}
-                            {usuario
-                                ? `${usuario.id_usuario} — ${usuario.usuario}`
-                                : 'Não informado'}
+                        <div className='flex justify-end gap-4'>
+                            <div className='self-end rounded-2xl bg-slate-900/80 px-4 py-2 text-slate-200 border'>{date}</div>
+                            <div className="self-end rounded-2xl bg-slate-900/80 px-4 py-2 text-slate-200 border">
+                                Usuário:{' '}
+                                {usuario
+                                    ? `${usuario.id_usuario} — ${usuario.usuario}`
+                                    : 'Não informado'}
+                            </div>
                         </div>
                         <div className="flex gap-2 text-right text-lg text-slate-300">
                             <span className="font-semibold text-slate-100">

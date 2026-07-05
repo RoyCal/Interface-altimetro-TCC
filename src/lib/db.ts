@@ -36,7 +36,33 @@ export async function getChartDataByType(
     return rows.map((row, index) => ({
         altitude: Number(row.valor),
         time_stamp: Number((index * 0.05).toFixed(2)),
+        date: String(row.data_medicao),
     }));
+}
+
+export async function findDataMedicaoByTipo(
+    idTipo: number,
+): Promise<string | null> {
+    const [rows] = await db.execute<RowDataPacket[]>(
+        'SELECT data_medicao FROM medicoes WHERE id_tipo = ? ORDER BY data_medicao LIMIT 1',
+        [idTipo],
+    );
+
+    if (!rows || rows.length === 0) {
+        return null;
+    }
+
+    const data = rows[0].data_medicao as Date;
+
+    return new Intl.DateTimeFormat('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+    }).format(data);
 }
 
 export type TipoValor = {

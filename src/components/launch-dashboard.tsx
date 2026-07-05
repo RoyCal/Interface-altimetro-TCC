@@ -14,6 +14,7 @@ interface ChartData {
 interface LaunchWithData extends TipoValor {
     usuario: Usuario | null;
     chartData: ChartData[];
+    launchDate: string | null;
 }
 
 interface LaunchDashboardProps {
@@ -266,7 +267,7 @@ export function LaunchDashboard({ launches }: LaunchDashboardProps) {
                                     <button
                                         type="button"
                                         onClick={() => resetSearch('visual')}
-                                        className="rounded-2xl border border-slate-700 bg-slate-950/90 px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-slate-500 hover:text-slate-100"
+                                        className="h-10 rounded-2xl border border-slate-700 bg-slate-950/90 px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-slate-500 hover:text-slate-100"
                                     >
                                         Resetar
                                     </button>
@@ -328,6 +329,7 @@ export function LaunchDashboard({ launches }: LaunchDashboardProps) {
                                         }
                                         type_data={selectedLaunch}
                                         usuario={selectedLaunch.usuario}
+                                        date={selectedLaunch.launchDate}
                                     />
                                 ) : (
                                     <div className="h-full min-h-0 overflow-hidden">
@@ -387,7 +389,7 @@ export function LaunchDashboard({ launches }: LaunchDashboardProps) {
                                     <button
                                         type="button"
                                         onClick={() => resetSearch('left')}
-                                        className="rounded-2xl border border-slate-700 bg-slate-950/90 px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-slate-500 hover:text-slate-100"
+                                        className="h-10 rounded-2xl border border-slate-700 bg-slate-950/90 px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-slate-500 hover:text-slate-100"
                                     >
                                         Resetar
                                     </button>
@@ -446,6 +448,7 @@ export function LaunchDashboard({ launches }: LaunchDashboardProps) {
                                         }
                                         type_data={leftLaunch}
                                         usuario={leftLaunch.usuario}
+                                        date={leftLaunch.launchDate}
                                     />
                                 ) : (
                                     <SkeletonCard title="Lado A aguardando seleção" />
@@ -501,7 +504,7 @@ export function LaunchDashboard({ launches }: LaunchDashboardProps) {
                                     <button
                                         type="button"
                                         onClick={() => resetSearch('right')}
-                                        className="rounded-2xl border border-slate-700 bg-slate-950/90 px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-slate-500 hover:text-slate-100"
+                                        className="h-10 rounded-2xl border border-slate-700 bg-slate-950/90 px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-slate-500 hover:text-slate-100"
                                     >
                                         Resetar
                                     </button>
@@ -560,6 +563,7 @@ export function LaunchDashboard({ launches }: LaunchDashboardProps) {
                                         }
                                         type_data={rightLaunch}
                                         usuario={rightLaunch.usuario}
+                                        date={rightLaunch.launchDate}
                                     />
                                 ) : (
                                     <SkeletonCard title="Lado B aguardando seleção" />

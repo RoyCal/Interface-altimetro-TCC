@@ -3,6 +3,7 @@ import {
     getChartDataByType,
     findAllTiposValores,
     findUsuarioById,
+    findDataMedicaoByTipo,
 } from '@/lib/db';
 
 export default async function Home() {
@@ -11,10 +12,12 @@ export default async function Home() {
         launches.map(async (launch) => {
             const usuario = await findUsuarioById(launch.id_usuario);
             const chartData = await getChartDataByType(launch.id_tipo);
+            const launchDate = await findDataMedicaoByTipo(launch.id_tipo)
             return {
                 ...launch,
                 usuario,
                 chartData,
+                launchDate,
             };
         }),
     );
