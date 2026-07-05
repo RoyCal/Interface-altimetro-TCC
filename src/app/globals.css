@@ -8,6 +8,13 @@ body {
   font-family: var(--font-space-grotesk), sans-serif;
 }
 
+.recharts-zIndex-layer_100:focus,
+.recharts-zIndex-layer_100:focus-visible,
+.recharts-zIndex-layer_1200:focus,
+.recharts-zIndex-layer_1200:focus-visible {
+    outline: none !important;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

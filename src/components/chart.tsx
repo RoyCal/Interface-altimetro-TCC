@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import {
     Area,
     AreaChart,
@@ -56,15 +58,15 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 function formatDuration(seconds: number): string {
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = seconds % 60;
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
 
-  const parts: string[] = [];
+    const parts: string[] = [];
 
-  if (m > 0) parts.push(`${m} min`);
-  if (s > 0 || parts.length === 0) parts.push(`${s} s`);
+    if (m > 0) parts.push(`${m} min`);
+    if (s > 0 || parts.length === 0) parts.push(`${s.toFixed(2)} s`);
 
-  return parts.join(" ");
+    return parts.join(' ');
 }
 
 function CustomTooltip({
@@ -114,6 +116,65 @@ export function ChartAreaDefault({
     type_data,
     usuario,
 }: ChartAreaDefaultProps) {
+    const [selectedPoints, setSelectedPoints] = useState<{
+        point1: number | null;
+        point2: number | null;
+    }>({ point1: null, point2: null });
+
+    useEffect(() => {
+        const frameId = window.requestAnimationFrame(() => {
+            setSelectedPoints({ point1: null, point2: null });
+        });
+
+        return () => window.cancelAnimationFrame(frameId);
+    }, [chartData]);
+
+    const handleChartInteraction = (state: unknown) => {
+        const activeTooltipIndex = (
+            state as { activeTooltipIndex?: number | string | null }
+        ).activeTooltipIndex;
+        const index = Number(activeTooltipIndex);
+        const point = chartData[index];
+
+        if (!point) {
+            return;
+        }
+
+        setSelectedPoints((current) => {
+            if (current.point1 === null) {
+                return { point1: index, point2: null };
+            }
+
+            if (current.point2 === null && index !== current.point1) {
+                return { point1: current.point1, point2: index };
+            }
+
+            return { point1: index, point2: null };
+        });
+    };
+
+    const firstPoint =
+        selectedPoints.point1 != null ? chartData[selectedPoints.point1] : null;
+    const secondPoint =
+        selectedPoints.point2 != null ? chartData[selectedPoints.point2] : null;
+
+    const hasOnePoint = firstPoint !== null;
+    const hasTwoPoints = firstPoint && secondPoint;
+    const timeDifference = hasTwoPoints
+        ? secondPoint.time_stamp - firstPoint.time_stamp
+        : null;
+    const altitudeDifference = hasTwoPoints
+        ? secondPoint.altitude - firstPoint.altitude
+        : null;
+    const averageSpeedKmh =
+        hasTwoPoints && timeDifference && timeDifference > 0
+            ? (Math.abs(altitudeDifference ?? 0) / timeDifference) * 3.6
+            : null;
+
+    const clearSelection = () => {
+        setSelectedPoints({ point1: null, point2: null });
+    };
+
     return (
         <Card className="flex h-full w-full max-h-[calc(100vh-8rem)] flex-col rounded-3xl overflow-hidden border border-slate-800/80 bg-slate-950 shadow-2xl shadow-slate-950/40">
             <CardHeader className="space-y-3 border-b border-slate-800/70 px-6 py-6">
@@ -127,29 +188,39 @@ export function ChartAreaDefault({
                                 'Dados de altitude do voo com frequência de 20Hz.'}
                         </CardDescription>
                     </div>
-                    <div className="flex gap-2 text-right text-lg text-slate-300">
-                        <span className="font-semibold text-slate-100">
-                            Apogeu:
-                        </span>
-                        <span>
-                            {apogee != null ? `${apogee.toFixed(2)} m` : '—'}
-                        </span>
-                        <span className="font-semibold text-slate-100">
-                            Tempo total
-                        </span>
-                        <span>
-                            {flight_time != null
-                                ? `${formatDuration(flight_time)}`
-                                : '—'}
-                        </span>
+                    <div className="flex flex-col gap-y-4">
+                        <div className="self-end rounded-2xl bg-slate-900/80 px-4 py-2 text-slate-200 border">
+                            Usuário:{' '}
+                            {usuario
+                                ? `${usuario.id_usuario} — ${usuario.usuario}`
+                                : 'Não informado'}
+                        </div>
+                        <div className="flex gap-2 text-right text-lg text-slate-300">
+                            <span className="font-semibold text-slate-100">
+                                Apogeu:
+                            </span>
+                            <span>
+                                {apogee != null
+                                    ? `${apogee.toFixed(2)} m`
+                                    : '—'}
+                            </span>
+                            <span className="font-semibold text-slate-100">
+                                Tempo total
+                            </span>
+                            <span>
+                                {flight_time != null
+                                    ? `${formatDuration(flight_time)}`
+                                    : '—'}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </CardHeader>
             <CardContent className="flex-1 min-h-0 overflow-hidden px-6 py-6">
                 <ChartContainer config={chartConfig} className="h-full min-h-0">
                     <AreaChart
-                        accessibilityLayer
                         data={chartData}
+                        onClick={handleChartInteraction}
                         margin={{
                             left: 20,
                             right: 20,
@@ -253,15 +324,50 @@ export function ChartAreaDefault({
                 </ChartContainer>
             </CardContent>
             <CardFooter className="flex flex-wrap items-center justify-between gap-4 border-t border-slate-800/70 px-6 py-4 text-sm text-slate-300">
-                <div className="max-w-xl leading-6">
-                    Exibindo a evolução da altitude ao longo do tempo, com
-                    destaque para o apogeu no voo.
-                </div>
-                <div className="rounded-2xl bg-slate-900/80 px-4 py-2 text-slate-200">
-                    Usuário:{' '}
-                    {usuario
-                        ? `${usuario.id_usuario} — ${usuario.usuario}`
-                        : 'Não informado'}
+                <div className="flex flex-wrap items-center gap-3">
+                    <div className="rounded-2xl bg-slate-900/80 px-4 py-2 text-slate-200">
+                        Ponto 1:{' '}
+                        {firstPoint
+                            ? `${firstPoint.time_stamp.toFixed(2)} s • ${firstPoint.altitude.toFixed(2)} m`
+                            : ''}
+                    </div>
+                    <div className="rounded-2xl bg-slate-900/80 px-4 py-2 text-slate-200">
+                        Ponto 2:{' '}
+                        {secondPoint
+                            ? `${secondPoint.time_stamp.toFixed(2)} s • ${secondPoint.altitude.toFixed(2)} m`
+                            : ''}
+                    </div>
+                    {hasTwoPoints ? (
+                        <>
+                            <div className="rounded-2xl bg-slate-900/80 px-4 py-2 text-slate-200">
+                                ΔTempo:{' '}
+                                {timeDifference != null
+                                    ? `${formatDuration(timeDifference)}`
+                                    : '—'}
+                            </div>
+                            <div className="rounded-2xl bg-slate-900/80 px-4 py-2 text-slate-200">
+                                ΔAltura:{' '}
+                                {altitudeDifference != null
+                                    ? `${altitudeDifference.toFixed(2)} m`
+                                    : '—'}
+                            </div>
+                            <div className="rounded-2xl bg-slate-900/80 px-4 py-2 text-slate-200">
+                                Velocidade média:{' '}
+                                {averageSpeedKmh != null
+                                    ? `${averageSpeedKmh.toFixed(2)} km/h`
+                                    : '—'}
+                            </div>
+                        </>
+                    ) : null}
+                    {hasOnePoint ? (
+                        <button
+                            type="button"
+                            onClick={clearSelection}
+                            className="rounded-2xl border border-rose-500/60 bg-rose-500/20 px-4 py-2 text-sm font-semibold text-rose-200 shadow-lg shadow-rose-500/10 transition hover:border-rose-400 hover:bg-rose-500/30"
+                        >
+                            Limpar seleção
+                        </button>
+                    ) : null}
                 </div>
             </CardFooter>
         </Card>
