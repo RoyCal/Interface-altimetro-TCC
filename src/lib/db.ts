@@ -1,23 +1,23 @@
 import mysql, { type RowDataPacket } from 'mysql2/promise';
 
 const globalForMysql = global as typeof globalThis & {
-  pool?: mysql.Pool;
+    pool?: mysql.Pool;
 };
 
 export const db =
-  globalForMysql.pool ??
-  mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
-  });
+    globalForMysql.pool ??
+    mysql.createPool({
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0,
+    });
 
-if (process.env.NODE_ENV !== "production") {
-  globalForMysql.pool = db;
+if (process.env.NODE_ENV !== 'production') {
+    globalForMysql.pool = db;
 }
 
 export type ChartDataPoint = {
@@ -65,6 +65,22 @@ export async function findAllTiposValores(): Promise<TipoValor[]> {
     }));
 }
 
+export async function findTiposValoresByTituloContains(
+    termo: string,
+): Promise<TipoValor[]> {
+    const [rows] = await db.execute<RowDataPacket[]>(
+        'SELECT id_tipo, id_usuario, titulo, descricao FROM tipos_valores WHERE titulo LIKE ? ORDER BY titulo LIMIT 50',
+        [`%${termo}%`],
+    );
+
+    return rows.map((row) => ({
+        id_tipo: Number(row.id_tipo),
+        id_usuario: Number(row.id_usuario),
+        titulo: String(row.titulo),
+        descricao: row.descricao == null ? null : String(row.descricao),
+    }));
+}
+
 export async function findTipoValorById(
     idTipo: number,
 ): Promise<TipoValor | null> {
@@ -87,8 +103,8 @@ export async function findTipoValorById(
 export async function findUsuarioById(
     idUsuario: number | undefined,
 ): Promise<Usuario | null> {
-    if (idUsuario === undefined){
-        return null
+    if (idUsuario === undefined) {
+        return null;
     }
 
     const [rows] = await db.execute<RowDataPacket[]>(
