@@ -78,33 +78,41 @@ export type Usuario = {
 };
 
 export async function findAllTiposValores(): Promise<TipoValor[]> {
-    const [rows] = await db.execute<RowDataPacket[]>(
-        'SELECT id_tipo, id_usuario, titulo, descricao FROM tipos_valores',
-        [],
-    );
+    try {
+        const [rows] = await db.execute<RowDataPacket[]>(
+            'SELECT id_tipo, id_usuario, titulo, descricao FROM tipos_valores',
+            [],
+        );
 
-    return rows.map((row) => ({
-        id_tipo: Number(row.id_tipo),
-        id_usuario: Number(row.id_usuario),
-        titulo: String(row.titulo),
-        descricao: row.descricao == null ? null : String(row.descricao),
-    }));
+        return rows.map((row) => ({
+            id_tipo: Number(row.id_tipo),
+            id_usuario: Number(row.id_usuario),
+            titulo: String(row.titulo),
+            descricao: row.descricao == null ? null : String(row.descricao),
+        }));
+    } catch {
+        return [];
+    }
 }
 
 export async function findTiposValoresByTituloContains(
     termo: string,
 ): Promise<TipoValor[]> {
-    const [rows] = await db.execute<RowDataPacket[]>(
-        'SELECT id_tipo, id_usuario, titulo, descricao FROM tipos_valores WHERE titulo LIKE ? ORDER BY titulo LIMIT 50',
-        [`%${termo}%`],
-    );
+    try {
+        const [rows] = await db.execute<RowDataPacket[]>(
+            'SELECT id_tipo, id_usuario, titulo, descricao FROM tipos_valores WHERE titulo LIKE ? ORDER BY titulo LIMIT 50',
+            [`%${termo}%`],
+        );
 
-    return rows.map((row) => ({
-        id_tipo: Number(row.id_tipo),
-        id_usuario: Number(row.id_usuario),
-        titulo: String(row.titulo),
-        descricao: row.descricao == null ? null : String(row.descricao),
-    }));
+        return rows.map((row) => ({
+            id_tipo: Number(row.id_tipo),
+            id_usuario: Number(row.id_usuario),
+            titulo: String(row.titulo),
+            descricao: row.descricao == null ? null : String(row.descricao),
+        }));
+    } catch {
+        return []
+    }
 }
 
 export async function findTipoValorById(
